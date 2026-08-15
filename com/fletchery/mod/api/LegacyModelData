@@ -1,0 +1,42 @@
+package com.fletchery.mod.api;
+
+import com.fletchery.mod.api.FletcheryComponentRegistry.Slot;
+
+public final class LegacyModelData {
+    private LegacyModelData() {}
+
+    public static int computeBase(String featherKey, String shaftKey, String tipKey) {
+        int f = FletcheryComponentRegistry.legacyIndexOf(Slot.FEATHER, featherKey);
+        int s = FletcheryComponentRegistry.legacyIndexOf(Slot.SHAFT, shaftKey);
+        int t = FletcheryComponentRegistry.legacyIndexOf(Slot.TIP, tipKey);
+        if (f < 0 || s < 0 || t < 0) return 0;
+        int shaftCount = FletcheryComponentRegistry.legacySize(Slot.SHAFT);
+        int tipCount = FletcheryComponentRegistry.legacySize(Slot.TIP);
+        return (f * shaftCount + s) * tipCount + t + 1;
+    }
+
+    private static int totalBases() {
+        return FletcheryComponentRegistry.legacySize(Slot.FEATHER)
+                * FletcheryComponentRegistry.legacySize(Slot.SHAFT)
+                * FletcheryComponentRegistry.legacySize(Slot.TIP);
+    }
+
+      public static int computeWithEffect(String featherKey, String shaftKey, String tipKey, String effectKey) {
+        int base = computeBase(featherKey, shaftKey, tipKey);
+        if (base == 0) return 0;
+        if (effectKey == null || effectKey.isEmpty()) return base;
+        int eIdx = FletcheryComponentRegistry.legacyIndexOf(Slot.EFFECT, effectKey);
+        if (eIdx < 0) return base;
+        return base + totalBases() * (eIdx + 1);
+    }
+    
+    public static int computeWithPotion(String featherKey, String shaftKey, String tipKey, String potionName, java.util.List<String> potionsOrder) {
+        int base = computeBase(featherKey, shaftKey, tipKey);
+        if (base == 0) return 0;
+        int pIdx = potionsOrder.indexOf(potionName);
+        if (pIdx < 0) return base;
+        int effectCount = FletcheryComponentRegistry.legacySize(Slot.EFFECT);
+        int globalIndex = effectCount + pIdx;
+        return base + totalBases() * (globalIndex + 1);
+    }
+}
