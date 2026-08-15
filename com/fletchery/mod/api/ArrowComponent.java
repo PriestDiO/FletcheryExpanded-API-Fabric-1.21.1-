@@ -1,21 +1,13 @@
 package com.fletchery.mod.api;
 
-import net.minecraft.item.ItemStack;
+import com.fletchery.mod.arrow.ArrowProperties;
+import com.fletchery.mod.config.ModConfig;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
-import java.util.function.Predicate;
-
-public record ArrowComponent(
-        Identifier id,
-        ArrowComponentType type,
-        Predicate<ItemStack> ingredientMatcher,
-        String textureName,
-        IArrowPropertyApplier propertyApplier,
-        boolean isBase // true – встроенный, false – кастомный
-) {
-    public ArrowComponent {
-        if (textureName == null || textureName.isEmpty()) {
-            textureName = id.getPath();
-        }
-    }
+public interface ArrowComponent {
+    Identifier id();
+    Item item();
+    String modelFile();
+    void apply(ArrowProperties props, ModConfig cfg);
 }
