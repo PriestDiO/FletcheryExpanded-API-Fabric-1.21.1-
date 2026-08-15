@@ -1,47 +1,69 @@
-# Fletchery Expanded API
+# Fletchery Expanded
 
-API for adding custom arrow components to the **Fletchery Expanded** mod.
+A deep crafting system for arrows for Fabric 1.21.x. Turns the fletching
+table into a powerful workstation: combine feathers, shafts, tips, and
+effects to craft thousands of unique arrows.
 
-With this API, addon developers can add:
-- New feathers
-- New shafts
-- New tips
-- New effects
+[Russian version / Русская версия](README.ru.md)
 
----
+## For players
 
-## How to use
+See the mod page on [Modrinth](#) / [CurseForge](#) for installation and
+feature overview.
 
-1. Download or clone this repository.
-2. Copy the `com/fletchery/mod/api/` folder into your project.
-3. Make sure your project has:
-   - Fabric API
-   - Minecraft 1.21.4+
+## For mod developers — Arrow Component API
 
-That's it! No Maven, no Gradle configuration — just copy and use.
+Since version X.X, Fletchery Expanded exposes a public API that lets other
+mods register their own feathers, shafts, tips, and effects, which then
+appear in the fletching table alongside the built-in ones.
 
----
+- **Getting started, Gradle setup, code examples:** [`docs/API_USAGE.md`](docs/API_USAGE.md)
+  ([Russian: `docs/API_USAGE.ru.md`](docs/API_USAGE.ru.md))
+- **How to verify your addon actually works:** [`docs/TESTING.md`](docs/TESTING.md)
+- **Runnable example addon:** [`examples/addon-example/`](examples/addon-example/)
+- **API source (what you're actually depending on):**
+  [`src/main/java/com/fletchery/mod/api/`](src/main/java/com/fletchery/mod/api/)
 
-## Example: Adding a new "Ruby" tip
+### Quick start
+
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    modImplementation "com.github.<your-github-user>:fletchery-expanded:<release-tag>"
+}
+```
+
+```json
+// your mod's fabric.mod.json
+"entrypoints": {
+    "fletchery_component": ["com.yourmod.YourFletcheryAddon"]
+}
+```
 
 ```java
-import com.fletchery.mod.api.ComponentRegistration;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-
-public class RubyAddon {
-    public static void register() {
-        ComponentRegistration reg = new ComponentRegistration();
-        
-        reg.registerTip(
-            Identifier.of("ruby_addon", "ruby"),            // Component ID
-            stack -> stack.getItem() == Items.AMETHYST_SHARD, // Ingredient
-            "ruby",                                          // Texture name
-            (stack, props) -> {                              // Properties
-                props.bonusDamage += 5;
-                props.glowTarget = true;
-                props.glowDuration = 100;
-            }
+public class YourFletcheryAddon implements FletcheryComponentInitializer {
+    @Override
+    public void onRegisterArrowComponents() {
+        FletcheryComponentRegistry.register(
+            FletcheryComponentRegistry.Slot.TIP,
+            new YourCustomTip()
         );
     }
 }
+```
+
+Full walkthrough in [`docs/API_USAGE.md`](docs/API_USAGE.md).
+
+### Known limitation
+
+Client-side model rendering for third-party (non-built-in) components is
+not implemented yet — addon arrows will craft, apply their stats, and
+behave correctly in combat, but will currently render with a
+missing/placeholder texture until this is added. Tracked as an open item;
+see the note in `src/main/java/com/fletchery/mod/api/ArrowModelKey.java`.
+
+## License
+
+MIT
