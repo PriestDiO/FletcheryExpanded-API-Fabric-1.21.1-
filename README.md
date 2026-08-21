@@ -1,6 +1,6 @@
 # Fletchery Expanded
 
-A deep crafting system for arrows for Fabric 1.21.x. Turns the fletching
+A deep crafting system for arrows for Fabric 1.21.1. Turns the fletching
 table into a powerful workstation: combine feathers, shafts, tips, and
 effects to craft thousands of unique arrows.
 
