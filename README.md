@@ -1,69 +1,62 @@
 # Fletchery Expanded
 
-A deep crafting system for arrows for Fabric 1.21.1. Turns the fletching
-table into a powerful workstation: combine feathers, shafts, tips, and
-effects to craft thousands of unique arrows.
+**Русский** | [English](README.md)
 
-[Russian version / Русская версия](README.ru.md)
+Fletchery Expanded — мод для Minecraft (Fabric, 1.21.1), превращающий верстак лучника (fletching table)
+в полноценную мастерскую по крафту стрел.
 
-## For players
+Собери стрелу из 4 компонентов — перо, древко, наконечник и эффект — и получи один из **тысяч** уникальных
+вариантов с собственной моделью, характеристиками и поведением.
 
-See the mod page on [Modrinth](#) / [CurseForge](#) for installation and
-feature overview.
+- Кастомный GUI верстака лучника с 3D-превью стрелы
+- Полная интеграция с JEI / REI (показывает все доступные комбинации)
+- Экран настроек на Cloth Config
+- Гибкая конфигурация балансировки (файл конфига)
+- Открытый API для добавления собственных компонентов сторонними модами
 
-## For mod developers — Arrow Component API
+## Установка
 
-Since version X.X, Fletchery Expanded exposes a public API that lets other
-mods register their own feathers, shafts, tips, and effects, which then
-appear in the fletching table alongside the built-in ones.
+1. Установи [Fabric Loader](https://fabricmc.net/) и [Fabric API](https://modrinth.com/mod/fabric-api)
+2. Скачай мод из [Modrinth](https://modrinth.com/mod/fletchery-expanded) или из [Releases](../../releases) этого репозитория
+3. Положи `.jar` в папку `mods`
 
-- **Getting started, Gradle setup, code examples:** [`docs/API_USAGE.md`](docs/API_USAGE.md)
-  ([Russian: `docs/API_USAGE.ru.md`](docs/API_USAGE.ru.md))
-- **How to verify your addon actually works:** [`docs/TESTING.md`](docs/TESTING.md)
-- **Runnable example addon:** [`examples/addon-example/`](examples/addon-example/)
-- **API source (what you're actually depending on):**
-  [`src/main/java/com/fletchery/mod/api/`](src/main/java/com/fletchery/mod/api/)
+Требования: Minecraft 1.21.1, Java 21+.
 
-### Quick start
+## Для игроков
 
-```gradle
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-dependencies {
-    modImplementation "com.github.<your-github-user>:fletchery-expanded:<release-tag>"
-}
+Открой верстак лучника, помести компоненты в четыре слота — перо, древко, наконечник, эффект — и получи
+стрелу. Список всех доступных компонентов и их эффектов можно посмотреть через JEI/REI прямо в игре.
+
+## Для разработчиков модов (API)
+
+Fletchery Expanded предоставляет открытый API, позволяющий другим модам регистрировать собственные
+перья, древки, наконечники и эффекты, которые автоматически появятся в крафте, в JEI/REI и получат
+собственную модель.
+
+Подробная инструкция: **[docs/API.md](docs/API.md)**
+
+Рабочий пример мода-аддона: **[examples/example-addon](examples/example-addon)**
+
+## Локализация
+
+Мод переведён на 10 языков: русский, английский, испанский, французский, хинди, индонезийский,
+казахский, португальский, украинский, белорусский, упрощённый китайский.
+
+Хочешь добавить свой перевод? См. [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Сборка из исходников
+
+```bash
+git clone https://github.com/<your-username>/fletchery-expanded.git
+cd fletchery-expanded
+./gradlew build
 ```
+Собранный jar появится в `build/libs/`.
 
-```json
-// your mod's fabric.mod.json
-"entrypoints": {
-    "fletchery_component": ["com.yourmod.YourFletcheryAddon"]
-}
-```
+## Лицензия
 
-```java
-public class YourFletcheryAddon implements FletcheryComponentInitializer {
-    @Override
-    public void onRegisterArrowComponents() {
-        FletcheryComponentRegistry.register(
-            FletcheryComponentRegistry.Slot.TIP,
-            new YourCustomTip()
-        );
-    }
-}
-```
+Распространяется по лицензии [MIT](LICENSE).
 
-Full walkthrough in [`docs/API_USAGE.md`](docs/API_USAGE.md).
+## Вклад в проект
 
-### Known limitation
-
-Client-side model rendering for third-party (non-built-in) components is
-not implemented yet — addon arrows will craft, apply their stats, and
-behave correctly in combat, but will currently render with a
-missing/placeholder texture until this is added. Tracked as an open item;
-see the note in `src/main/java/com/fletchery/mod/api/ArrowModelKey.java`.
-
-## License
-
-MIT
+Пул-реквесты, репорты багов и предложения по балансу приветствуются — см. [CONTRIBUTING.md](CONTRIBUTING.md).
