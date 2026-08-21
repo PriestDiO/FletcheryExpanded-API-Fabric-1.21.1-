@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "example_addon",
+	"version": "${version}",
+	"name": "Example Fletchery Addon",
+	"description": "Example addon that registers a custom arrow tip via the Fletchery Expanded API.",
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.example.fletcheryaddon.ExampleFletcheryAddon"],
+		"fletchery_component": ["com.example.fletcheryaddon.FletcheryAddonComponents"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fletchery_expanded": "*"
+	}
+}
